@@ -1,0 +1,35 @@
+<!DOCTYPE html>                                                                                                        
+  <html lang="ja">                                                                                                       
+  <head>                                                                                                                 
+    <meta charset="UTF-8">                                                                                               
+    <title>キッズ向けテトリス風ゲーム</title>                                                                            
+    <link rel="stylesheet" href="styles.css">                                                                            
+  </head>                                                                                                                
+  <body>                                                                                                                 
+    <main class="game-wrapper">                                                                                          
+      <section class="board-panel">                                                                                      
+        <canvas id="board" width="300" height="600" aria-label="Tetris board"></canvas>                                  
+        <div class="controls">                                                                                           
+          <label for="difficulty">むずかしさ:</label>                                                                    
+          <select id="difficulty">                                                                                       
+            <option value="easy">やさしい</option>                                                                       
+            <option value="normal" selected>ふつう</option>                                                              
+            <option value="hard">むずかしい</option>                                                                     
+          </select>                                                                                                      
+          <button id="startBtn">スタート / リセット</button>                                                             
+          <p class="hint">操作: ← → 移動 / ↑ 回転 / ↓ 早く落とす / Space 即落下</p>                                      
+        </div>                                                                                                           
+      </section>                                                                                                         
+      <aside class="info-panel">                                                                                         
+        <h1>テトリスで遊ぼう！</h1>                                                                                      
+        <p>スコア: <span id="score">0</span></p>                                                                         
+        <p>レベル: <span id="level">1</span></p>                                                                         
+        <div id="nextWrapper" class="next-piece">                                                                        
+          <p>次のブロック:</p>                                                                                           
+          <canvas id="next" width="120" height="120"></canvas>                                                           
+        </div>                                                                                                           
+      </aside>                                                                                                           
+    </main>                                                                                                              
+    <script src="game.js"></script>                                                                                      
+  </body>                                                                                                                
+  </html>                                                                                                                
