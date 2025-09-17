@@ -1,6 +1,26 @@
-const COLS = 10;                                                                                                       
-  const ROWS = 20;                                                                                                       
-  const BLOCK_SIZE = 30;                                                                                                 
+const COLS = 10;
+  const ROWS = 20;
+  let BLOCK_SIZE = 30;
+
+  // ブロックサイズを画面サイズに応じて調整
+  function adjustBlockSize() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const maxWidth = width * 0.9;
+    const maxHeight = height * 0.7;
+    
+    const horizontalBlocks = maxWidth / COLS;
+    const verticalBlocks = maxHeight / ROWS;
+    
+    BLOCK_SIZE = Math.floor(Math.min(horizontalBlocks, verticalBlocks, 30));
+    
+    boardCanvas.width = COLS * BLOCK_SIZE;
+    boardCanvas.height = ROWS * BLOCK_SIZE;
+    nextCanvas.width = 120;
+    nextCanvas.height = 120;
+    
+    render();
+  }
   const COLORS = {                                                                                                       
     I: "#00f0f0",                                                                                                        
     J: "#0000f0",                                                                                                        

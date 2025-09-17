@@ -85,9 +85,79 @@
     gap: 6px;                                                                                                            
   }                                                                                                                      
                                                                                                                          
-  @media (max-width: 720px) {                                                                                            
-    .game-wrapper {                                                                                                      
-      flex-direction: column;                                                                                            
-      align-items: center;                                                                                               
-    }                                                                                                                    
-  }                     
+  @media (max-width: 720px) {
+    .game-wrapper {
+      flex-direction: column;
+      align-items: center;
+      padding: 12px;
+      margin: 10px;
+      width: 100%;
+      max-width: 100vw;
+    }
+
+    .board-panel {
+      width: 100%;
+      max-width: 100vw;
+      padding: 0;
+    }
+
+    canvas#board {
+      width: 100%;
+      max-width: 100vw;
+      height: auto;
+      max-height: 80vh;
+    }
+
+    .controls {
+      width: 100%;
+      padding: 10px;
+    }
+
+    .info-panel {
+      width: 100%;
+      flex-direction: row;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .next-piece {
+      align-items: center;
+    }
+
+    #touch-controls {
+      width: 100%;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    #touch-controls button {
+      padding: 12px 24px;
+      font-size: 24px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      touch-action: manipulation;
+    }
+
+    .hint {
+      display: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .game-wrapper {
+      padding: 8px;
+    }
+
+    #touch-controls {
+      gap: 8px;
+    }
+
+    #touch-controls button {
+      padding: 10px 20px;
+      font-size: 20px;
+    }
+  }
