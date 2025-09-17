@@ -16,8 +16,8 @@ const COLS = 10;
     
     boardCanvas.width = COLS * BLOCK_SIZE;
     boardCanvas.height = ROWS * BLOCK_SIZE;
-    nextCanvas.width = 120;
-    nextCanvas.height = 120;
+    nextCanvas.width = 160;
+    nextCanvas.height = 160;
     
     render();
   }
