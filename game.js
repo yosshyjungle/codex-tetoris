@@ -256,15 +256,18 @@ const COLS = 10;
   }                                                                                                                      
                                                                                                                          
   function hardDrop() {
+    if (!isRunning) return;
     let moved = false;
     while (movePiece(1, 0)) {
-      score += 2;
       moved = true;
     }
-    if (moved) {
-      updateScore();
+    mergePiece();
+    clearLines();
+    spawnPiece();
+    if (hasCollision(currentPiece)) {
+      endGame();
     }
-    drop();
+    render();
   }
                                                                                                                          
   function rotatePiece() {
@@ -378,7 +381,9 @@ const COLS = 10;
         render();
         return true;
       case "drop":
+      case "hardDrop":
         hardDrop();
+        render();
         return true;
       default:
         return false;
