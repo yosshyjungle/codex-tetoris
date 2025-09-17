@@ -58,6 +58,45 @@ const COLS = 10;
   const levelEl = document.getElementById("level");                                                                      
   const startBtn = document.getElementById("startBtn");                                                                  
   const difficultySelect = document.getElementById("difficulty");                                                        
+  // タッチ操作用ボタン生成関数
+  function createTouchControls() {
+    const controlsDiv = document.querySelector('.controls');
+    if (!controlsDiv) return;
+    // 既存のタッチボタンがあれば削除
+    const oldTouch = document.getElementById('touch-controls');
+    if (oldTouch) oldTouch.remove();
+    const touchDiv = document.createElement('div');
+    touchDiv.id = 'touch-controls';
+    touchDiv.style.display = 'flex';
+    touchDiv.style.justifyContent = 'center';
+    touchDiv.style.gap = '8px';
+    touchDiv.style.marginTop = '12px';
+    // ボタン定義
+    const btns = [
+      { action: 'left', label: '←' },
+      { action: 'rotate', label: '⟳' },
+      { action: 'right', label: '→' },
+      { action: 'down', label: '↓' },
+      { action: 'hardDrop', label: '即落' }
+    ];
+    btns.forEach(btn => {
+      const b = document.createElement('button');
+      b.textContent = btn.label;
+      b.setAttribute('data-action', btn.action);
+      b.style.fontSize = '1.5em';
+      b.style.padding = '8px 16px';
+      b.style.borderRadius = '8px';
+      b.style.border = '1px solid #ccc';
+      b.style.background = '#f8f8f8';
+      b.style.boxShadow = '1px 1px 2px #ddd';
+      b.style.touchAction = 'manipulation';
+      touchDiv.appendChild(b);
+    });
+    controlsDiv.appendChild(touchDiv);
+  }
+
+  createTouchControls();
+  const touchButtons = document.querySelectorAll('[data-action]');
                                                                                                                          
   const DIFFICULTY_SPEEDS = {                                                                                            
     easy: 1100,                                                                                                          
@@ -216,20 +255,27 @@ const COLS = 10;
     return false;                                                                                                        
   }                                                                                                                      
                                                                                                                          
-  function hardDrop() {                                                                                                  
-    while (movePiece(1, 0)) {                                                                                            
-      score += 2;                                                                                                        
-    }                                                                                                                    
-    drop();                                                                                                              
-  }                                                                                                                      
+  function hardDrop() {
+    let moved = false;
+    while (movePiece(1, 0)) {
+      score += 2;
+      moved = true;
+    }
+    if (moved) {
+      updateScore();
+    }
+    drop();
+  }
                                                                                                                          
-  function rotatePiece() {                                                                                               
-    const rotated = rotate(currentPiece.matrix);                                                                         
-    const testPiece = { ...currentPiece, matrix: rotated };                                                              
-    if (!hasCollision(testPiece)) {                                                                                      
-      currentPiece = testPiece;                                                                                          
-    }                                                                                                                    
-  }                                                                                                                      
+  function rotatePiece() {
+    const rotated = rotate(currentPiece.matrix);
+    const testPiece = { ...currentPiece, matrix: rotated };
+    if (!hasCollision(testPiece)) {
+      currentPiece = testPiece;
+      return true;
+    }
+    return false;
+  }
                                                                                                                          
   function spawnPiece() {                                                                                                
     currentPiece = nextPiece || randomPiece();                                                                           
@@ -277,6 +323,68 @@ const COLS = 10;
     boardCtx.fillText("ゲームオーバー！スタートで再挑戦", boardCanvas.width / 2, boardCanvas.height / 2 + 8);            
   }                                                                                                                      
                                                                                                                          
+  document.addEventListener("keydown", event => {
+    const action = KEYBOARD_ACTIONS[event.key];
+    if (!action) {
+      return;
+    }
+    event.preventDefault();
+    applyAction(action);
+  });
+
+  // タッチ・クリック操作イベント
+  if (touchButtons.length) {
+    touchButtons.forEach(button => {
+      const action = button.dataset.action;
+      if (!action) return;
+      // タッチ
+      button.addEventListener('touchstart', event => {
+        event.preventDefault();
+        applyAction(action);
+      }, { passive: false });
+      // クリック（PC用）
+      button.addEventListener('click', event => {
+        event.preventDefault();
+        applyAction(action);
+      });
+    });
+  }
+
+  function applyAction(action) {
+    if (!isRunning) {
+      return false;
+    }
+
+    switch (action) {
+      case "left":
+        movePiece(0, -1);
+        render();
+        return true;
+      case "right":
+        movePiece(0, 1);
+        render();
+        return true;
+      case "down": {
+        const moved = movePiece(1, 0);
+        if (moved) {
+          score += 1;
+          updateScore();
+        }
+        render();
+        return true;
+      }
+      case "rotate":
+        rotatePiece();
+        render();
+        return true;
+      case "drop":
+        hardDrop();
+        return true;
+      default:
+        return false;
+    }
+  }
+
   document.addEventListener("keydown", event => {                                                                        
     if (!isRunning) return;                                                                                              
     switch (event.key) {                                                                                                 
